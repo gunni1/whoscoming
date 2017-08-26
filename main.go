@@ -1,10 +1,11 @@
 package main
 
 import (
-	"net/http"
-	"log"
-	"github.com/gorilla/mux"
 	"fmt"
+	"github.com/gorilla/mux"
+	"log"
+	"net/http"
+	"whoscoming/controller"
 )
 
 const (
@@ -14,7 +15,9 @@ const (
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", index)
-	//router.HandleFunc("/training", )
+	router.HandleFunc("/training", controller.CreateTrainingHandler)
+	router.HandleFunc("/training/{trainingId}", controller.GetTrainingHandler)
+	router.HandleFunc("/trainings", controller.GetTrainingsHandler)
 
 	fmt.Println("listening on " + port)
 	log.Fatal(http.ListenAndServe(port, router))
