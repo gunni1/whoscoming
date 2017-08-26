@@ -14,6 +14,7 @@ const (
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", index)
+	//router.HandleFunc("/training", )
 
 	fmt.Println("listening on " + port)
 	log.Fatal(http.ListenAndServe(port, router))
