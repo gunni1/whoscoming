@@ -18,6 +18,7 @@ func main() {
 	router.HandleFunc("/training", controller.CreateTrainingHandler)
 	router.HandleFunc("/training/{trainingId}", controller.GetTrainingHandler)
 	router.HandleFunc("/trainings", controller.GetTrainingsHandler)
+	router.HandleFunc("/training/{trainingId}/participate", controller.ParticipateHandler)
 
 	fmt.Println("listening on " + port)
 	log.Fatal(http.ListenAndServe(port, router))

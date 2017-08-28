@@ -19,17 +19,21 @@ type CreateTrainingDto struct {
 	CreatingUser string
 }
 
-func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) {
-	decoder := json.NewDecoder(request.Body)
-	var createTrainingDto CreateTrainingDto
-	error := decoder.Decode(&createTrainingDto)
+type ParticipateDto struct {
+	UserName string
+}
 
-	if error != nil {
-		http.Error(response, error.Error(), http.StatusBadRequest)
+func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) {
+	var createTrainingDto CreateTrainingDto
+	decoder := json.NewDecoder(request.Body)
+	decodeError := decoder.Decode(&createTrainingDto)
+
+	if decodeError != nil {
+		http.Error(response, decodeError.Error(), http.StatusBadRequest)
 	} else {
-		trainingTime, error := time.Parse(time.RFC3339, createTrainingDto.TrainingTime)
-		if error != nil {
-			http.Error(response, error.Error(), http.StatusBadRequest)
+		trainingTime, parseError := time.Parse(time.RFC3339, createTrainingDto.TrainingTime)
+		if parseError != nil {
+			http.Error(response, parseError.Error(), http.StatusBadRequest)
 		} else {
 			training := repo.CreateTraining(createTrainingDto.Title, createTrainingDto.Location, trainingTime, createTrainingDto.CreatingUser)
 			json.NewEncoder(response).Encode(training)
@@ -38,8 +42,7 @@ func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) 
 }
 
 func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	trainingId := vars["trainingId"]
+	trainingId := extractRequestVar("trainingId", request)
 
 	avatar, found := repo.GetTraining(trainingId)
 	if found {
@@ -52,4 +55,26 @@ func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
 
 func GetTrainingsHandler(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(repo.GetTrainings())
+}
+
+func ParticipateHandler(response http.ResponseWriter, request *http.Request) {
+	var participateDto ParticipateDto
+	decodeError := json.NewDecoder(request.Body).Decode(&participateDto)
+
+	if decodeError != nil {
+		http.Error(response, decodeError.Error(), http.StatusBadRequest)
+	} else {
+		trainingId := extractRequestVar("trainingId", request)
+		updatedTraining, error := repo.Participate(trainingId, participateDto.UserName)
+		if error != nil {
+			http.Error(response, error.Error(), http.StatusBadRequest)
+		} else {
+			json.NewEncoder(response).Encode(updatedTraining)
+		}
+	}
+}
+
+func extractRequestVar(variable string, request *http.Request) string {
+	vars := mux.Vars(request)
+	return vars[variable]
 }

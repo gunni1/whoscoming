@@ -4,6 +4,7 @@ import (
 	"time"
 	"strconv"
 	"fmt"
+	"errors"
 )
 
 var (
@@ -28,6 +29,17 @@ func CreateTraining(title string, location string, trainingTime time.Time, creat
 	trainings[newId] = training
 	fmt.Println(training)
 	return training
+}
+
+func Participate(trainingId string, userName string) (Training, error) {
+	training, found := trainings[trainingId]
+	if found {
+		training.Participants = append(training.Participants, userName)
+		trainings[trainingId] = training
+		return training, nil
+	} else {
+		return training, errors.New("No training found for id: " + trainingId)
+	}
 }
 
 func GetTraining(trainingId string) (Training, bool){
