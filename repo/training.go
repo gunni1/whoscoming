@@ -21,9 +21,9 @@ type Training struct {
 
 type Trainings []Training
 
-func CreateTraining(title string, location string, trainingTime time.Time, participant string) Training {
+func CreateTraining(title string, location string, trainingTime time.Time, creatingUser string) Training {
 	newId := nextId()
-	p := []string{participant}
+	p := []string{creatingUser}
 	training := Training{Id: newId, Title: title, Location: location, TrainingTime: trainingTime, Participants: p}
 	trainings[newId] = training
 	fmt.Println(training)

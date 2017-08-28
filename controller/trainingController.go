@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"net/http"
 	"encoding/json"
-	"whoscoming/repo"
-	"time"
 	"github.com/gorilla/mux"
+	"net/http"
+	"time"
+	"whoscoming/repo"
 )
 
 var (
@@ -13,10 +13,10 @@ var (
 )
 
 type CreateTrainingDto struct {
-	Title 			string
-	Location 		string
-	TrainingTime	string
-
+	Title        string
+	Location     string
+	TrainingTime string
+	CreatingUser string
 }
 
 func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) {
@@ -30,14 +30,14 @@ func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) 
 		trainingTime, error := time.Parse(time.RFC3339, createTrainingDto.TrainingTime)
 		if error != nil {
 			http.Error(response, error.Error(), http.StatusBadRequest)
-		} else{
-			training := repo.CreateTraining(createTrainingDto.Title, createTrainingDto.Location, trainingTime)
+		} else {
+			training := repo.CreateTraining(createTrainingDto.Title, createTrainingDto.Location, trainingTime, createTrainingDto.CreatingUser)
 			json.NewEncoder(response).Encode(training)
 		}
 	}
 }
 
-func GetTrainingHandler(response http.ResponseWriter, request *http.Request){
+func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	trainingId := vars["trainingId"]
 
@@ -50,6 +50,6 @@ func GetTrainingHandler(response http.ResponseWriter, request *http.Request){
 	}
 }
 
-func GetTrainingsHandler(response http.ResponseWriter, request *http.Request){
+func GetTrainingsHandler(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(repo.GetTrainings())
 }
