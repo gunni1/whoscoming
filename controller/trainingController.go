@@ -5,7 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"time"
-	"whoscoming/repo"
+	"whoscoming/mapRepo"
 )
 
 var (
@@ -35,7 +35,7 @@ func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) 
 		if parseError != nil {
 			http.Error(response, parseError.Error(), http.StatusBadRequest)
 		} else {
-			training := repo.CreateTraining(createTrainingDto.Title, createTrainingDto.Location, trainingTime, createTrainingDto.CreatingUser)
+			training := mapRepo.CreateTraining(createTrainingDto.Title, createTrainingDto.Location, trainingTime, createTrainingDto.CreatingUser)
 			json.NewEncoder(response).Encode(training)
 		}
 	}
@@ -44,7 +44,7 @@ func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) 
 func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
 	trainingId := extractRequestVar("trainingId", request)
 
-	avatar, found := repo.GetTraining(trainingId)
+	avatar, found := mapRepo.GetTraining(trainingId)
 	if found {
 		json.NewEncoder(response).Encode(avatar)
 	} else {
@@ -54,7 +54,7 @@ func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func GetTrainingsHandler(response http.ResponseWriter, request *http.Request) {
-	json.NewEncoder(response).Encode(repo.GetTrainings())
+	json.NewEncoder(response).Encode(mapRepo.GetTrainings())
 }
 
 func ParticipateHandler(response http.ResponseWriter, request *http.Request) {
@@ -65,7 +65,7 @@ func ParticipateHandler(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, decodeError.Error(), http.StatusBadRequest)
 	} else {
 		trainingId := extractRequestVar("trainingId", request)
-		updatedTraining, error := repo.Participate(trainingId, participateDto.UserName)
+		updatedTraining, error := mapRepo.Participate(trainingId, participateDto.UserName)
 		if error != nil {
 			http.Error(response, error.Error(), http.StatusBadRequest)
 		} else {

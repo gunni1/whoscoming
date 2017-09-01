@@ -1,26 +1,17 @@
-package repo
+package mapRepo
 
 import (
 	"time"
 	"strconv"
 	"fmt"
 	"errors"
+	. "whoscoming/domain"
 )
 
 var (
 	trainings = make(map[string]Training)
 	nextId = trainingIdSeq()
 )
-
-type Training struct {
-	Id string `json:"id"`
-	Title string `json:"title"`
-	Location string `json:"location"`
-	TrainingTime time.Time `json:"trainingTime"`
-	Participants []string `json:"participants"`
-}
-
-type Trainings []Training
 
 func CreateTraining(title string, location string, trainingTime time.Time, creatingUser string) Training {
 	newId := nextId()
@@ -31,14 +22,14 @@ func CreateTraining(title string, location string, trainingTime time.Time, creat
 	return training
 }
 
-func Participate(trainingId string, userName string) (Training, error) {
+func Participate(trainingId string, userName string) ([]string, error) {
 	training, found := trainings[trainingId]
 	if found {
 		training.Participants = append(training.Participants, userName)
 		trainings[trainingId] = training
-		return training, nil
+		return training.Participants, nil
 	} else {
-		return training, errors.New("No training found for id: " + trainingId)
+		return nil, errors.New("No training found for id: " + trainingId)
 	}
 }
 
