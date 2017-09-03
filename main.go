@@ -15,10 +15,10 @@ const (
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", index)
-	router.HandleFunc("/training", controller.CreateTrainingHandler)
-	router.HandleFunc("/training/{trainingId}", controller.GetTrainingHandler)
-	router.HandleFunc("/trainings", controller.GetTrainingsHandler)
-	router.HandleFunc("/training/{trainingId}/participate", controller.ParticipateHandler)
+	router.HandleFunc("/training", controller.CreateTrainingHandler).Methods("POST")
+	router.HandleFunc("/training/{trainingId}", controller.GetTrainingHandler).Methods("GET")
+	router.HandleFunc("/trainings", controller.GetTrainingsHandler).Methods("GET")
+	router.HandleFunc("/training/{trainingId}/participate", controller.ParticipateHandler).Methods("POST")
 
 	fmt.Println("listening on " + port)
 	log.Fatal(http.ListenAndServe(port, router))

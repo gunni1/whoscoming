@@ -24,6 +24,8 @@ type ParticipateDto struct {
 }
 
 func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("Content-Type", "application/json")
+
 	var createTrainingDto CreateTrainingDto
 	decoder := json.NewDecoder(request.Body)
 	decodeError := decoder.Decode(&createTrainingDto)
@@ -42,8 +44,9 @@ func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) 
 }
 
 func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
-	trainingId := extractRequestVar("trainingId", request)
+	response.Header().Set("Content-Type", "application/json")
 
+	trainingId := extractRequestVar("trainingId", request)
 	avatar, found := mapRepo.GetTraining(trainingId)
 	if found {
 		json.NewEncoder(response).Encode(avatar)
@@ -54,10 +57,13 @@ func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func GetTrainingsHandler(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(response).Encode(mapRepo.GetTrainings())
 }
 
 func ParticipateHandler(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("Content-Type", "application/json")
+
 	var participateDto ParticipateDto
 	decodeError := json.NewDecoder(request.Body).Decode(&participateDto)
 
