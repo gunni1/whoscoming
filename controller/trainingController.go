@@ -5,7 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"time"
-	"whoscoming/mapRepo"
+	"whoscoming/mongodb"
 )
 
 var (
@@ -37,7 +37,7 @@ func CreateTrainingHandler(response http.ResponseWriter, request *http.Request) 
 		if parseError != nil {
 			http.Error(response, parseError.Error(), http.StatusBadRequest)
 		} else {
-			training := mapRepo.CreateTraining(createTrainingDto.Title, createTrainingDto.Location, trainingTime, createTrainingDto.CreatingUser)
+			training := mongodb.CreateTraining(createTrainingDto.Title, createTrainingDto.Location, trainingTime, createTrainingDto.CreatingUser)
 			json.NewEncoder(response).Encode(training)
 		}
 	}
@@ -47,9 +47,9 @@ func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
 
 	trainingId := extractRequestVar("trainingId", request)
-	avatar, found := mapRepo.GetTraining(trainingId)
+	training, found := mongodb.GetTraining(trainingId)
 	if found {
-		json.NewEncoder(response).Encode(avatar)
+		json.NewEncoder(response).Encode(training)
 	} else {
 		error := "training with id: " + trainingId + " not found."
 		http.Error(response, error, http.StatusBadRequest)
@@ -58,7 +58,7 @@ func GetTrainingHandler(response http.ResponseWriter, request *http.Request) {
 
 func GetTrainingsHandler(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(response).Encode(mapRepo.GetTrainings())
+	json.NewEncoder(response).Encode(mongodb.GetTrainings())
 }
 
 func ParticipateHandler(response http.ResponseWriter, request *http.Request) {
@@ -71,7 +71,7 @@ func ParticipateHandler(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, decodeError.Error(), http.StatusBadRequest)
 	} else {
 		trainingId := extractRequestVar("trainingId", request)
-		updatedTraining, error := mapRepo.Participate(trainingId, participateDto.UserName)
+		updatedTraining, error := mongodb.Participate(trainingId, participateDto.UserName)
 		if error != nil {
 			http.Error(response, error.Error(), http.StatusBadRequest)
 		} else {

@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"whoscoming/controller"
+	"whoscoming/mongodb"
 )
 
 const (
@@ -19,6 +20,9 @@ func main() {
 	router.HandleFunc("/training/{trainingId}", controller.GetTrainingHandler).Methods("GET")
 	router.HandleFunc("/trainings", controller.GetTrainingsHandler).Methods("GET")
 	router.HandleFunc("/training/{trainingId}/participate", controller.ParticipateHandler).Methods("POST")
+
+	session := mongodb.OpenDbConnection()
+	defer session.Close()
 
 	fmt.Println("listening on " + port)
 	log.Fatal(http.ListenAndServe(port, router))
