@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"errors"
 	. "whoscoming/domain"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var (
@@ -16,7 +17,7 @@ var (
 func CreateTraining(title string, location string, trainingTime time.Time, creatingUser string) Training {
 	newId := nextId()
 	p := []string{creatingUser}
-	training := Training{Id: newId, Title: title, Location: location, TrainingTime: trainingTime, Participants: p}
+	training := Training{Id: bson.ObjectId(newId), Title: title, Location: location, TrainingTime: trainingTime, Participants: p}
 	trainings[newId] = training
 	fmt.Println(training)
 	return training
