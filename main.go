@@ -28,7 +28,7 @@ func main() {
 	defer session.Close()
 
 	fmt.Println("REST API listening on " + *apiPort)
-	log.Fatal(http.ListenAndServe(*apiPort, router))
+	log.Fatal(http.ListenAndServe(":"+ *apiPort, router))
 }
 
 func index(response http.ResponseWriter, request *http.Request) {
