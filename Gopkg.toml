@@ -21,7 +21,7 @@
 #  version = "2.4.0"
 
 [metadata.heroku]
-  root-package = "whoscoming"
+  root-package = "github.com/gunni1/whoscoming"
   go-version = "1.9.1"
   install = [ "./..." ]
 
