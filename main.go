@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"whoscoming/controller"
 	"whoscoming/mongodb"
+	"flag"
 )
 
 const (
@@ -14,6 +15,9 @@ const (
 )
 
 func main() {
+	dbUrl := flag.String("mongodb","localhost:27017", "Connection String to a MongoDB")
+	flag.Parse()
+
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", index)
 	router.HandleFunc("/training", controller.CreateTrainingHandler).Methods("POST")
@@ -21,7 +25,7 @@ func main() {
 	router.HandleFunc("/trainings", controller.GetTrainingsHandler).Methods("GET")
 	router.HandleFunc("/training/{trainingId}/participate", controller.ParticipateHandler).Methods("POST")
 
-	session := mongodb.OpenDbConnection()
+	session := mongodb.OpenDbConnection(*dbUrl)
 	defer session.Close()
 
 	fmt.Println("listening on " + port)

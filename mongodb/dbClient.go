@@ -19,8 +19,9 @@ var(
 	db *mgo.Database
 )
 
-func OpenDbConnection() mgo.Session {
-	session, error := mgo.Dial("localhost:27017")
+func OpenDbConnection(dbUrl string) mgo.Session {
+	log.Println("connect to mongodb using url: " + dbUrl)
+	session, error := mgo.Dial(dbUrl)
 	if error != nil {
 		panic(error)
 	}

@@ -8,10 +8,6 @@ import (
 	"whoscoming/mongodb"
 )
 
-var (
-	homeLocation, _ = time.LoadLocation("Europe/Berlin")
-)
-
 type CreateTrainingDto struct {
 	Title        string
 	Location     string
