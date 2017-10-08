@@ -21,7 +21,7 @@
 #  version = "2.4.0"
 
 [metadata.heroku]
-  root-package = "github.com/gunni1/whoscoming"
+  root-package = "whoscoming"
   install = [ "./..." ]
 
 [[constraint]]
