@@ -1,4 +1,8 @@
 *.iml
 /.idea
 
+# Dependencies
 vendor/*
+
+# Build result
+whoscoming
